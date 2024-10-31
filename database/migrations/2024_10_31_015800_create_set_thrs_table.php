@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('set_thrs', function (Blueprint $table) {
             $table->id('id_set_thr');
-            $table->foreignId('posisi_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('posisi_id')->nullable()->constrained('posisis', 'id_posisi')->cascadeOnDelete();
             $table->decimal('besaran_thr', 10, 2);
             $table->timestamps();
         });

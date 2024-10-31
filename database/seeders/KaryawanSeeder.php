@@ -49,7 +49,7 @@ class KaryawanSeeder extends Seeder
         ]);
 
         Karyawan::create([
-            'nik' => '3507123673849209',
+            'nik' => '3507123673666543',
             'nama' => 'Bjorka El Hacker',
             'tanggal_lahir' => '1987-07-08',
             'jenis_kelamin' => 'Laki-laki',

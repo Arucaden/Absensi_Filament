@@ -19,7 +19,6 @@ class DatabaseSeeder extends Seeder
             KaryawanSeeder::class,
             AbsensiSeeder::class,
             SetThrSeeder::class,
-            ThrSeeder::class,
             AdminActivityLogSeeder::class,
         ]);
     }

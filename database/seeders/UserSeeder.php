@@ -15,9 +15,9 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::create([
-            'name' => 'Joo',
-            'email' => 'j@email.com',
-            'password' => Hash::make('joo'), // Menggunakan Hash untuk menyimpan password
+            'name' => 'Ela',
+            'email' => 'e@email.com',
+            'password' => Hash::make('ela'), // Menggunakan Hash untuk menyimpan password
             'remember_token' => Str::random(60), // Menggunakan Str untuk generate remember_token
         ]);
     }
