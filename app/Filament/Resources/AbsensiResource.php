@@ -25,10 +25,12 @@ class AbsensiResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('karyawan_id')
-                    ->numeric(),
+                Forms\Components\Select::make('karyawan_id')
+                    ->relationship('karyawan', 'nama'),
                 Forms\Components\DatePicker::make('tanggal')
-                    ->required(),
+                ->default(now()->timezone('Asia/Jakarta')->toDateString()) // sets the default date to today's date in Indonesia
+                ->required()
+                ->label('Tanggal'),
                 Forms\Components\TextInput::make('jam_masuk'),
                 Forms\Components\TextInput::make('jam_keluar'),
                 Forms\Components\TextInput::make('status'),
@@ -41,8 +43,7 @@ class AbsensiResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('karyawan_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('karyawan.nama')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('tanggal')
                     ->date()
@@ -53,6 +54,7 @@ class AbsensiResource extends Resource
                 Tables\Columns\TextColumn::make('jam_keluar')
                     ->label('Jam Keluar')
                     ->formatStateUsing(fn ($state) => Carbon::parse($state)->format('H:i')),
+                Tables\Columns\TextColumn::make('durasi'),
                 Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

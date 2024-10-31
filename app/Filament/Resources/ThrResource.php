@@ -31,6 +31,14 @@ class ThrResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('karyawan.nama')
+                ->searchable()
+                ->sortable(),
+                Tables\Columns\TextColumn::make('thr')
+                ->label('Besaran THR')
+                ->searchable()
+                ->sortable()
+                ->formatStateUsing(fn ($state) => 'Rp. ' . number_format($state, 0, ',', '.')),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

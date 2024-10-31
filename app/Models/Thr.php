@@ -50,31 +50,38 @@ class THR extends Model
         $totalDurasiKerja = Absensi::where('karyawan_id', $karyawanId)
             ->sum(DB::raw('TIMESTAMPDIFF(HOUR, jam_masuk, jam_keluar)'));
 
-        // 2. Ambil data posisi dan durasi kerja yang dibutuhkan
+        // 2. Ambil data karyawan dan pastikan tidak null
         $karyawan = Karyawan::find($karyawanId);
-        $posisi = Posisi::find($karyawan->posisi_id);  // Pastikan `posisi_id` sesuai dengan kolom yang menghubungkan ke Posisi
+        if (!$karyawan) {
+            // Return early if karyawan not found
+            return;
+        }
+
+        // 3. Ambil data posisi karyawan
+        $posisi = Posisi::find($karyawan->posisi_id);
+        if (!$posisi) {
+            // Return early if posisi not found
+            return;
+        }
 
         // Mengambil jam kerja per hari dan hari kerja per minggu dari posisi
         $jamKerjaPerHari = $posisi->jam_kerja_per_hari;
         $hariKerjaPerMinggu = $posisi->hari_kerja_per_minggu;
 
-        // 3. Hitung total durasi kerja yang dibutuhkan per tahun
+        // 4. Hitung total durasi kerja yang dibutuhkan per tahun
         $totalDurasiKerjaDibutuhkan = $jamKerjaPerHari * $hariKerjaPerMinggu * 52;
 
-        // 4. Ambil besaran THR dari tabel SetThr sesuai posisi
+        // 5. Ambil besaran THR dari tabel SetThr sesuai posisi
         $besaranTHR = SetThr::where('posisi_id', $posisi->id_posisi)->value('besaran_thr');
 
-        // 5. Hitung THR berdasarkan proporsi durasi kerja aktual dan yang dibutuhkan
-        if ($totalDurasiKerjaDibutuhkan > 0) {
-            $thr = ($besaranTHR * $totalDurasiKerja) / $totalDurasiKerjaDibutuhkan;
-        } else {
-            $thr = 0; // Menghindari pembagian dengan nol
-        }
+        // 6. Hitung THR berdasarkan proporsi durasi kerja aktual dan yang dibutuhkan
+        $thr = $totalDurasiKerjaDibutuhkan > 0 ? ($besaranTHR * $totalDurasiKerja) / $totalDurasiKerjaDibutuhkan : 0;
 
-        // 6. Simpan nilai THR di tabel THRs
+        // 7. Simpan nilai THR di tabel THRs
         THR::updateOrCreate(
             ['karyawan_id' => $karyawanId], // Kunci pencarian
             ['thr' => $thr]                  // Data yang ingin diupdate atau disimpan
         );
     }
+
 }

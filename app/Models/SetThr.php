@@ -10,6 +10,7 @@ class SetThr extends Model
     use HasFactory;
 
     protected $table = 'set_thrs';
+    protected $primaryKey = 'id_set_thr';
 
     protected $fillable = ['posisi_id', 'besaran_thr'];
 
@@ -35,5 +36,12 @@ class SetThr extends Model
     {
         return $this->hasMany(Thr::class, 'tahun', 'tahun');
     }
+
+    // In SetThr.php
+    public function posisi()
+    {
+        return $this->belongsTo(Posisi::class, 'posisi_id', 'id_posisi');
+    }
+
 }
 

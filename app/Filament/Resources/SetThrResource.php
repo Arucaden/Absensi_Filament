@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Validation\Rule;
 
 class SetThrResource extends Resource
 {
@@ -22,8 +23,19 @@ class SetThrResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                //
+        ->schema([
+            Forms\Components\Select::make('posisi_id')
+                ->relationship('posisi', 'posisi')
+                ->required()
+                ->rule(function ($record) {
+                    return Rule::unique('set_thrs', 'posisi_id')
+                        ->ignore($record->id_set_thr ?? null, 'id_set_thr'); // Ensure correct ID is ignored
+                })
+                ->label('Posisi'),
+
+                Forms\Components\TextInput::make('besaran_thr')
+                ->required()
+                ->numeric(),
             ]);
     }
 
@@ -31,6 +43,10 @@ class SetThrResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('posisi.posisi')
+                ->searchable(),
+                Tables\Columns\TextColumn::make('besaran_thr')
+                ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
