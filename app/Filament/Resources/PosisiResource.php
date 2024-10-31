@@ -12,6 +12,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Validation\Rule;
+
 
 class PosisiResource extends Resource
 {
@@ -25,7 +27,11 @@ class PosisiResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('posisi')
                     ->required()
-                    ->maxLength(50),
+                    ->maxLength(50)
+                    ->rule(function ($record) {
+                        return Rule::unique('posisis', 'posisi')
+                            ->ignore($record->id_posisi ?? null, 'id_posisi'); // Ensure correct ID is ignored
+                    }),
                 Forms\Components\TextInput::make('jam_kerja_per_hari')
                     ->required()
                     ->numeric(),

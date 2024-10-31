@@ -12,6 +12,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Carbon\Carbon;
+
 
 class AbsensiResource extends Resource
 {
@@ -45,8 +47,12 @@ class AbsensiResource extends Resource
                 Tables\Columns\TextColumn::make('tanggal')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('jam_masuk'),
-                Tables\Columns\TextColumn::make('jam_keluar'),
+                Tables\Columns\TextColumn::make('jam_masuk')
+                    ->label('Jam Masuk')
+                    ->formatStateUsing(fn ($state) => Carbon::parse($state)->format('H:i')),
+                Tables\Columns\TextColumn::make('jam_keluar')
+                    ->label('Jam Keluar')
+                    ->formatStateUsing(fn ($state) => Carbon::parse($state)->format('H:i')),
                 Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -58,7 +64,41 @@ class AbsensiResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\Filter::make('tanggal_hari_ini')
+                    ->label('Tanggal Hari Ini')
+                    ->query(fn (Builder $query) => $query->whereDate('tanggal', Carbon::today())),
+
+                Tables\Filters\Filter::make('kemarin')
+                    ->label('Kemarin')
+                    ->query(fn (Builder $query) => $query->whereDate('tanggal', Carbon::yesterday())),
+
+                Tables\Filters\Filter::make('seminggu_terakhir')
+                    ->label('Seminggu Terakhir')
+                    ->query(fn (Builder $query) => $query->whereDate('tanggal', '>=', Carbon::today()->subWeek())),
+
+                Tables\Filters\Filter::make('sebulan_terakhir')
+                    ->label('Sebulan Terakhir')
+                    ->query(fn (Builder $query) => $query->whereDate('tanggal', '>=', Carbon::today()->subMonth())),
+
+                Tables\Filters\Filter::make('setahun_terakhir')
+                    ->label('Setahun Terakhir')
+                    ->query(fn (Builder $query) => $query->whereDate('tanggal', '>=', Carbon::today()->subYear())),
+
+                Tables\Filters\Filter::make('status_hadir')
+                    ->label('Hadir')
+                    ->query(fn (Builder $query) => $query->where('status', 'Hadir')),
+
+                Tables\Filters\Filter::make('status_sakit')
+                    ->label('Sakit')
+                    ->query(fn (Builder $query) => $query->where('status', 'Sakit')),
+
+                Tables\Filters\Filter::make('status_izin')
+                    ->label('Izin')
+                    ->query(fn (Builder $query) => $query->where('status', 'Izin')),
+
+                Tables\Filters\Filter::make('status_alpa')
+                    ->label('Alpa')
+                    ->query(fn (Builder $query) => $query->where('status', 'Alpa')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -69,6 +109,7 @@ class AbsensiResource extends Resource
                 ]),
             ]);
     }
+
 
     public static function getRelations(): array
     {

@@ -9,13 +9,16 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('set_thrs', function (Blueprint $table) {
-            $table->id();
+            $table->id('id_set_thr');
+            $table->foreignId('posisi_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->decimal('besaran_thr', 10, 2);
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.
