@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Carbon\Carbon;
 use App\Models\AdminActivityLog;
+use Mpdf\Mpdf;
 
 class KaryawanResource extends Resource
 {
@@ -115,6 +116,16 @@ class KaryawanResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
+            ->headerActions([
+                Tables\Actions\Action::make('Export Excel')
+                    ->url(route('export-karyawan'))
+                    ->openUrlInNewTab(),
+                // Mengubah ekspor PDF menjadi action yang memanggil controller
+                Tables\Actions\Action::make('Export PDF')
+                    ->label('Export PDF')
+                    ->url(route('karyawan.exportPDF')) // Pastikan route ini ada
+                    ->openUrlInNewTab(),
+            ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
@@ -173,4 +184,5 @@ class KaryawanResource extends Resource
             'edit' => Pages\EditKaryawan::route('/{record}/edit'),
         ];
     }
+
 }

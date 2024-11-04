@@ -55,6 +55,12 @@ class ThrResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->headerActions([
+                Tables\Actions\Action::make('Export Excel')
+                    ->url(route('export-thr'))
+                    ->openUrlInNewTab()
+                    ->icon('heroicon-o-rectangle-stack')
+            ])
             ->filters([
                 //
             ])
@@ -65,7 +71,8 @@ class ThrResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+;
     }
 
     public static function getRelations(): array

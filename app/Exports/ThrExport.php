@@ -14,18 +14,19 @@ class ThrExport implements FromArray, WithHeadings, WithTitle
      */
     public function array(): array
     {
-        // Ambil semua data THR
-        $thrData = THR::all()->toArray();
+        // Ambil semua data THR beserta relasi ke karyawan dan posisi
+        $thrData = THR::with('karyawan.posisi')->get();
 
         // Format data menjadi array yang sesuai
         $formattedData = [];
         foreach ($thrData as $item) {
             $formattedData[] = [
-                $item['id_thr'],           // ID THR
-                $item['karyawan_id'],      // Karyawan ID
-                $item['thr'],              // THR
-                $item['created_at'],       // Created At
-                $item['updated_at'],       // Updated At
+                'ID THR' => $item->id_thr,
+                'Nama Karyawan' => optional($item->karyawan)->nama,   // Nama karyawan dari relasi
+                'Posisi' => optional($item->karyawan->posisi)->posisi, // Nama posisi dari relasi posisi
+                'THR' => $item->thr,
+                'Created At' => $item->created_at,
+                'Updated At' => $item->updated_at,
             ];
         }
 
@@ -38,11 +39,12 @@ class ThrExport implements FromArray, WithHeadings, WithTitle
     public function headings(): array
     {
         return [
-            'ID THR',        // Nama kolom
-            'Karyawan ID',   // Nama kolom
-            'THR',           // Nama kolom
-            'Created At',    // Nama kolom
-            'Updated At',    // Nama kolom
+            'ID THR',
+            'Nama Karyawan',
+            'Posisi',
+            'THR',
+            'Created At',
+            'Updated At',
         ];
     }
 
