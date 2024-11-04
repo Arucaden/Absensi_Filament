@@ -19,6 +19,10 @@ class ThrResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationLabel = 'List THR';
+
+    protected static ?string $pluralLabel = 'Tunjangan Hari Raya';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -32,6 +36,9 @@ class ThrResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('karyawan.nama')
+                ->searchable()
+                ->sortable(),
+                Tables\Columns\TextColumn::make('karyawan.posisi.posisi')
                 ->searchable()
                 ->sortable(),
                 Tables\Columns\TextColumn::make('thr')

@@ -12,6 +12,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Carbon\Carbon;
+use App\Models\AdminActivityLog;
 
 class KaryawanResource extends Resource
 {
@@ -19,32 +21,60 @@ class KaryawanResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationLabel = 'Kelola Karyawan';
+
+    protected static ?string $label = 'Kelola Karyawan';
+
+    protected static ?string $pluralLabel = 'Kelola Karyawan';
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('nik')
+                    ->label('NIK')
+                    ->required()
                     ->maxLength(16),
                 Forms\Components\TextInput::make('nama')
+                    ->label('Nama lengkap')
                     ->required()
                     ->maxLength(100),
-                Forms\Components\DatePicker::make('tanggal_lahir'),
-                Forms\Components\TextInput::make('jenis_kelamin'),
+                Forms\Components\DatePicker::make('tanggal_lahir')
+                ->required(),
+                Forms\Components\Select::make('jenis_kelamin')
+                ->options([
+                    'Laki-laki' => 'Laki-laki',
+                    'Perempuan' => 'Perempuan'
+                ]),
                 Forms\Components\Textarea::make('alamat')
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('agama'),
+                    ->columnSpanFull()
+                    ->required(),
+                Forms\Components\Select::make('agama')
+                    ->options([
+                        'Islam' => 'Islam',
+                        'Kristen' => 'Kristen',
+                        'Katolik' => 'Katolik',
+                        'Hindu' => 'Hindu',
+                        'Buddha' => 'Buddha',
+                        'Konghucu' => 'Konghucu',
+                        'Lainnya' => 'Lainnya',
+                    ])
+                    ->required(),
                 Forms\Components\TextInput::make('no_telepon')
                     ->tel()
-                    ->maxLength(15),
+                    ->maxLength(15)
+                    ->required(),
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->maxLength(100),
-                Forms\Components\DateTimePicker::make('tanggal_masuk')
-                    ->required(),
+                Forms\Components\DatePicker::make('tanggal_masuk')
+                    ->required()
+                    ->default(Carbon::now('Asia/Jakarta')),
                 Forms\Components\TextInput::make('foto_path')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('posisi_id')
-                    ->numeric(),
+                Forms\Components\Select::make('posisi_id')
+                    ->relationship('posisi', 'posisi')
+                    ->required(),
             ]);
     }
 
@@ -68,10 +98,7 @@ class KaryawanResource extends Resource
                 Tables\Columns\TextColumn::make('tanggal_masuk')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('foto_path')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('posisi_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('posisi.posisi')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -101,6 +128,42 @@ class KaryawanResource extends Resource
             //
         ];
     }
+
+    protected static function afterCreate(Karyawan $record): void
+    {
+        AdminActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'create',
+            'from' => null, // Tidak ada data sebelumnya
+            'to' => json_encode($record->getAttributes()),
+        ]);
+    }
+
+    protected static function afterUpdate(Karyawan $record): void
+    {
+        AdminActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'update',
+            'from' => json_encode($record->getOriginal()),
+            'to' => json_encode($record->getAttributes()),
+        ]);
+    }
+
+    protected static function afterDelete(Karyawan $record): void
+    {
+        AdminActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'delete',
+            'from' => json_encode($record->getAttributes()),
+            'to' => null, // Karena data ini dihapus
+        ]);
+    }
+
+    public static function getRecordRouteKeyName(): string
+    {
+    return 'id_karyawan';
+    }
+
 
     public static function getPages(): array
     {

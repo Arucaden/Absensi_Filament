@@ -21,6 +21,13 @@ class AbsensiResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationLabel = 'Kelola Absensi';
+
+    protected static ?string $label = 'Kelola Absensi';
+
+    protected static ?string $pluralLabel = 'Kelola Absensi';
+
+
     public static function form(Form $form): Form
     {
         return $form

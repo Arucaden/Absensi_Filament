@@ -11,21 +11,17 @@ class AdminActivityLog extends Model
 
     protected $table = 'admin_activity_logs';
     protected $primaryKey = 'id_log';
-    public $incrementing = false;
 
     protected $fillable = [
-        'id_log',
-        'id_admin',
-        'activity',
-        'activity_time'
+        'user_id',
+        'action',
+        'from',
+        'to',
+        'action_time',
     ];
 
-    protected $casts = [
-        'activity_time' => 'datetime'
-    ];
-
-    public function admin()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'id_admin', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

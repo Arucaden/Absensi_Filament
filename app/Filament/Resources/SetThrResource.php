@@ -20,6 +20,12 @@ class SetThrResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationLabel = 'Set THR';
+
+    protected static ?string $label = 'Setting Tunjangan Hari Raya';
+
+    protected static ?string $pluralLabel = 'Setting Tunjangan Hari Raya';
+
     public static function form(Form $form): Form
     {
         return $form

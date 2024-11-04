@@ -26,13 +26,12 @@ class AdminActivityLogResource extends Resource
                 Forms\Components\TextInput::make('user_id')
                     ->numeric(),
                 Forms\Components\TextInput::make('action')
-                    ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('result')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\DateTimePicker::make('action_time')
-                    ->required(),
+                Forms\Components\Textarea::make('from')
+                    ->columnSpanFull(),
+                Forms\Components\Textarea::make('to')
+                    ->columnSpanFull(),
+                Forms\Components\DateTimePicker::make('action_time'),
             ]);
     }
 
@@ -40,13 +39,17 @@ class AdminActivityLogResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('user.name')
+                    ->default('Null')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('action')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('result')
+                    Tables\Columns\TextColumn::make('from')
+                    ->default('Null')
                     ->searchable(),
+                    Tables\Columns\TextColumn::make('to')
+                    ->searchable()
+                    ->default('Null'),
                 Tables\Columns\TextColumn::make('action_time')
                     ->dateTime()
                     ->sortable(),
@@ -63,12 +66,9 @@ class AdminActivityLogResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 
@@ -83,8 +83,6 @@ class AdminActivityLogResource extends Resource
     {
         return [
             'index' => Pages\ListAdminActivityLogs::route('/'),
-            'create' => Pages\CreateAdminActivityLog::route('/create'),
-            'edit' => Pages\EditAdminActivityLog::route('/{record}/edit'),
         ];
     }
 }

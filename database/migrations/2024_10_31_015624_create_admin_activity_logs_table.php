@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('admin_activity_logs', function (Blueprint $table) {
             $table->id('id_log');
             $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->string('action');
-            $table->string('result');
-            $table->timestamp('action_time')->useCurrent();
+            $table->string('action')->nullable();
+            $table->text('from')->nullable();
+            $table->text('to')->nullable();
+            $table->timestamp('action_time')->useCurrent()->nullable();
             $table->timestamps();
         });
     }
