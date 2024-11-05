@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Mpdf\Mpdf;
 
 class ThrResource extends Resource
 {
@@ -58,8 +59,12 @@ class ThrResource extends Resource
             ->headerActions([
                 Tables\Actions\Action::make('Export Excel')
                     ->url(route('export-thr'))
-                    ->openUrlInNewTab()
-                    ->icon('heroicon-o-rectangle-stack')
+                    ->openUrlInNewTab(),
+                // Mengubah ekspor PDF menjadi action yang memanggil controller
+                Tables\Actions\Action::make('Export PDF')
+                    ->label('Export PDF')
+                    ->url(route('thr.exportPDF')) // Pastikan route ini ada
+                    ->openUrlInNewTab(),
             ])
             ->filters([
                 //

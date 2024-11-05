@@ -112,6 +112,16 @@ class AbsensiResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
+            ->headerActions([
+                Tables\Actions\Action::make('Export Excel')
+                    ->url(route('export-absensi'))
+                    ->openUrlInNewTab(),
+                // Mengubah ekspor PDF menjadi action yang memanggil controller
+                Tables\Actions\Action::make('Export PDF')
+                    ->label('Export PDF')
+                    ->url(route('absensi.exportPDF')) // Pastikan route ini ada
+                    ->openUrlInNewTab(),
+            ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
