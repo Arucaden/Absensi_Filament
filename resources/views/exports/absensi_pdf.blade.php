@@ -22,7 +22,7 @@
     </style>
 </head>
 <body>
-    <h1>Data Absensi Perusahaan Ngentot</h1>
+    <h1>Data Absensi Perusahaan Trio Macan</h1>
     <table>
         <thead>
             <tr>

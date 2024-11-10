@@ -49,7 +49,7 @@ class Karyawan extends Model
         });
 
         static::updated(function ($model) {
-            $changes = $model->getChanges(); // Mendapatkan atribut yang diubah
+            $changes = $model->getDirty(); // Menggunakan getDirty() untuk mengambil atribut yang diubah sebelum penyimpanan
             $original = $model->getOriginal(); // Mendapatkan nilai asli
 
             // Variabel untuk menyimpan data 'from' dan 'to' dengan tambahan kolom id_karyawan dan nama
@@ -71,7 +71,7 @@ class Karyawan extends Model
                 }
             }
 
-            if (!empty($from) || !empty($to)) { // Pastikan hanya mencatat jika ada perubahan yang relevan
+            if (!empty(array_diff_assoc($from, $to))) { // Pastikan hanya mencatat jika ada perubahan yang relevan
                 AdminActivityLog::create([
                     'user_id' => auth()->id(),
                     'action' => 'update',

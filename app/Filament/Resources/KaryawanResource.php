@@ -24,8 +24,6 @@ class KaryawanResource extends Resource
 
     protected static ?string $navigationLabel = 'Kelola Karyawan';
 
-    protected static ?string $label = 'Kelola Karyawan';
-
     protected static ?string $pluralLabel = 'Kelola Karyawan';
 
     public static function form(Form $form): Form
@@ -91,7 +89,7 @@ class KaryawanResource extends Resource
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('jenis_kelamin'),
-                Tables\Columns\TextColumn::make('agama'),
+                Tables\Columns\TextColumn::make('alamat'),
                 Tables\Columns\TextColumn::make('no_telepon')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
@@ -114,6 +112,7 @@ class KaryawanResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->headerActions([

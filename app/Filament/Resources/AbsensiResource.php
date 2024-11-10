@@ -13,6 +13,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Carbon\Carbon;
+use App\Filament\Resources\AbsensiResource\Widgets\StatsOverview;
 
 
 class AbsensiResource extends Resource
@@ -23,10 +24,15 @@ class AbsensiResource extends Resource
 
     protected static ?string $navigationLabel = 'Kelola Absensi';
 
-    protected static ?string $label = 'Kelola Absensi';
 
     protected static ?string $pluralLabel = 'Kelola Absensi';
 
+    public static function getWidgets(): array
+    {
+        return [
+            StatsOverview::class,
+        ];
+    }
 
     public static function form(Form $form): Form
     {
@@ -40,7 +46,13 @@ class AbsensiResource extends Resource
                 ->label('Tanggal'),
                 Forms\Components\TextInput::make('jam_masuk'),
                 Forms\Components\TextInput::make('jam_keluar'),
-                Forms\Components\TextInput::make('status'),
+                Forms\Components\Select::make('status')
+                ->options([
+                    'Hadir' => 'Hadir',
+                    'Sakit' => 'Sakit',
+                    'Izin' => 'Izin',
+                    'Alpa' => 'Alpa'
+                ]),
                 Forms\Components\Textarea::make('keterangan')
                     ->columnSpanFull(),
             ]);
@@ -110,6 +122,7 @@ class AbsensiResource extends Resource
                     ->query(fn (Builder $query) => $query->where('status', 'Alpa')),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->headerActions([

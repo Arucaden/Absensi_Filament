@@ -22,7 +22,7 @@ class SetThrResource extends Resource
 
     protected static ?string $navigationLabel = 'Set THR';
 
-    protected static ?string $label = 'Setting Tunjangan Hari Raya';
+    protected static ?string $label = 'Set THR';
 
     protected static ?string $pluralLabel = 'Setting Tunjangan Hari Raya';
 
@@ -66,6 +66,7 @@ class SetThrResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([

@@ -1,56 +1,30 @@
 <?php
 
-namespace App\Exports;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-use App\Models\THR;
-use Maatwebsite\Excel\Concerns\FromArray;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithTitle;
-
-class ThrExport implements FromArray, WithHeadings, WithTitle
+return new class extends Migration
 {
     /**
-     * @return array
+     * Run the migrations.
      */
-    public function array(): array
+    public function up()
     {
-        // Ambil semua data THR
-        $thrData = THR::all()->toArray();
-
-        // Format data menjadi array yang sesuai
-        $formattedData = [];
-        foreach ($thrData as $item) {
-            $formattedData[] = [
-                $item['id_thr'],           // ID THR
-                $item['karyawan_id'],      // Karyawan ID
-                $item['thr'],              // THR
-                $item['created_at'],       // Created At
-                $item['updated_at'],       // Updated At
-            ];
-        }
-
-        return $formattedData;
+        Schema::create('thrs', function (Blueprint $table) {
+            $table->id('id_thr');
+            $table->foreignId('karyawan_id')->nullable()->constrained('karyawans', 'id_karyawan')->cascadeOnDelete();
+            $table->decimal('thr', 10, 2);
+            $table->timestamps();
+        });
     }
+
 
     /**
-     * @return array
+     * Reverse the migrations.
      */
-    public function headings(): array
+    public function down(): void
     {
-        return [
-            'ID THR',        // Nama kolom
-            'Karyawan ID',   // Nama kolom
-            'THR',           // Nama kolom
-            'Created At',    // Nama kolom
-            'Updated At',    // Nama kolom
-        ];
+        Schema::dropIfExists('thrs');
     }
-
-    /**
-     * @return string
-     */
-    public function title(): string
-    {
-        return 'Tabel THR'; // Judul sheet
-    }
-}
+};

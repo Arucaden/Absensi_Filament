@@ -55,4 +55,4 @@ class ThrExport implements FromArray, WithHeadings, WithTitle
     {
         return 'Tabel THR'; // Judul sheet
     }
-}
+} //
