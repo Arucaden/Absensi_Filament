@@ -21,6 +21,7 @@ class ThrResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationLabel = 'List THR';
+    protected static ?string $label = 'THR';
 
     protected static ?string $pluralLabel = 'Tunjangan Hari Raya';
 

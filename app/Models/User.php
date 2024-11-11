@@ -1,17 +1,15 @@
 <?php
-
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, HasApiTokens, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -46,6 +44,30 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Menambahkan logika untuk memeriksa role pengguna
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Menambahkan logika untuk memeriksa apakah pengguna adalah super admin
+     *
+     * @return bool
+     */
+    public function isSuperAdmin()
+    {
+        return $this->role === 'super_admin';
+    }
+
+    /**
+     * Event lifecycle: logging activity (created, updated, deleted)
+     */
     protected static function boot()
     {
         parent::boot();
@@ -60,28 +82,25 @@ class User extends Authenticatable
         });
 
         static::updated(function ($model) {
-            $changes = $model->getChanges(); // Mendapatkan atribut yang diubah
-            $original = $model->getOriginal(); // Mendapatkan nilai asli
+            $changes = $model->getChanges();
+            $original = $model->getOriginal();
 
-            // Hanya menyimpan atribut yang berubah, kecuali 'tanggal_masuk' dan kolom timestamp
             $from = ['id'];
             $to = [];
 
             foreach ($changes as $key => $value) {
-                // Mengabaikan kolom 'tanggal_masuk' dan kolom timestamp
                 if ($key !== 'tanggal_masuk' && !in_array($key, ['created_at', 'updated_at'])) {
-                    // Menyimpan atribut yang diubah
                     $from[$key] = $original[$key];
                     $to[$key] = $value;
                 }
             }
 
-            if (!empty($from) || !empty($to)) { // Pastikan hanya mencatat jika ada perubahan yang relevan
+            if (!empty($from) || !empty($to)) {
                 AdminActivityLog::create([
                     'user_id' => auth()->id(),
                     'action' => 'update',
-                    'from' => json_encode($from), // Hanya atribut yang diubah
-                    'to' => json_encode($to), // Hanya atribut yang diubah
+                    'from' => json_encode($from),
+                    'to' => json_encode($to),
                 ]);
             }
         });
@@ -90,9 +109,10 @@ class User extends Authenticatable
             AdminActivityLog::create([
                 'user_id' => auth()->id(),
                 'action' => 'delete',
-                'from' => json_encode($model->getAttributes()), // Menyimpan semua data saat dihapus
-                'to' => null, // Karena data ini dihapus
+                'from' => json_encode($model->getAttributes()),
+                'to' => null,
             ]);
         });
     }
+
 }
