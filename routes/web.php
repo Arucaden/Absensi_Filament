@@ -30,13 +30,3 @@ Route::get('/absensi/export-pdf', [AbsensiController::class, 'exportPDF'])->name
 Route::get('/export-thr', [ThrController::class, 'export'])->name('export-thr');
 Route::get('/thr/export-pdf', [ThrController::class, 'exportPDF'])->name('thr.exportPDF');
 
-
-Route::group(['middleware' => ['role:super_admin']], function () {
-    Route::resource('all_features', AllFeaturesController::class);
-});
-
-Route::group(['middleware' => ['role:admin,super_admin']], function () {
-    Route::resource('absensi', AbsensiController::class);
-    Route::resource('karyawan', KaryawanController::class);
-    Route::resource('thr', ThrController::class);
-});
