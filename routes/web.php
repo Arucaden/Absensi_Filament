@@ -31,3 +31,9 @@ Route::get('/export-thr', [ThrController::class, 'export'])->name('export-thr');
 Route::get('/thr/export-pdf', [ThrController::class, 'exportPDF'])->name('thr.exportPDF');
 
 
+Route::get('/login-test', function () {
+    return view('login_test');
+});
+
+
+
