@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('no_telepon', 15)->nullable();
             $table->string('email', 100)->nullable();
             $table->timestamp('tanggal_masuk')->useCurrent();
-            $table->string('foto_path', 255)->nullable();
+            // $table->string('foto_path', 255)->nullable();
+            $table->json('face_vector')->nullable();
             $table->foreignId('posisi_id')->nullable()->constrained('posisis', 'id_posisi')->onDelete('set null');
             $table->timestamps();
         });

@@ -22,7 +22,8 @@ class Karyawan extends Model
         'no_telepon',
         'email',
         'tanggal_masuk',
-        'posisi_id'
+        'posisi_id',
+        'face_vector'
     ];
 
     public function posisi()

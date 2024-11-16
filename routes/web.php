@@ -10,7 +10,6 @@ use App\Exports\AbsensiExport;
 use App\Http\Controllers\AbsensiController;
 
 
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -30,10 +29,20 @@ Route::get('/absensi/export-pdf', [AbsensiController::class, 'exportPDF'])->name
 Route::get('/export-thr', [ThrController::class, 'export'])->name('export-thr');
 Route::get('/thr/export-pdf', [ThrController::class, 'exportPDF'])->name('thr.exportPDF');
 
-
+// NYOBA LOGIN API-----------------------------------------------------
 Route::get('/login-test', function () {
     return view('login_test');
 });
+
+use App\Http\Controllers\Api\FaceController;
+
+Route::get('/debug', function () {
+    return view('debug');
+});
+
+// Proses debug
+Route::post('/debug/check-face-match', [FaceController::class, 'CheckFaceMatch'])->name('debug.check-face-match');
+
 
 
 

@@ -9,7 +9,7 @@ use App\Models\Posisi;
 use App\Models\SetThr;
 use Illuminate\Support\Facades\DB;
 
-class THR extends Model
+class Thr extends Model
 {
     protected $table = 'thrs';
     protected $primaryKey = 'id_thr'; // Set primary key menjadi id_thr
